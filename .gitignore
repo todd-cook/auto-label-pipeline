@@ -1,0 +1,53 @@
+/.mypy_cache/
+/.pytest_cache/
+# mypy
+.mypy_cache
+
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+
+
+
+
+# Sphinx
+_build
+#_static
+_templates
+
+# Mac
+.DS_Store
+
+# an IDE
+.idea
+
+# Jupyter notebook
+.ipynb_checkpoints
+
+# cache
+.cache
+
+# pytest
+.pytest_cache

@@ -1,0 +1,82 @@
+stages:
+  fetch:
+    cmd:
+      - python src/fetch.py --param_group fetch_data
+      - python src/fetch.py --param_group fetch_model
+    always_changed: True
+    deps:
+      - src/fetch.py
+    params:
+      - fetch_data.file
+      - fetch_data.uri
+      - fetch_model.file
+      - fetch_model.uri
+  prepare:
+    cmd: python src/prepare.py
+    deps:
+      - src/prepare.py
+      - data/raw
+    outs:
+      - data/prepared/data.all.csv
+    metrics:
+      - reports/prepare.metrics.json:
+          cache: false
+    params:
+      - fetch_data.file
+      - prepare.embeddings_dim
+      - prepare.filter_lang_bool
+      - prepare.filter_lang
+      - prepare.lang_detect_model
+      - prepare.stopwords_filter_lang
+      - prepare.filter_count_gteq
+      - prepare.tfidf_dict_pickle_file
+  train:
+    cmd: python src/train.py
+    deps:
+    - data/prepared/data.all.csv
+    - src/train.py
+    outs:
+    - model/svm.model.pkl
+    metrics:
+    - model/train.metrics.json:
+        cache: false
+    plots:
+    - model/classes.metrics.csv:
+        cache: false
+    params:
+    - train.class_types
+    - train.degree
+    - train.dual
+    - train.gamma
+    - train.kernel
+    - train.loss
+    - train.model_type
+    - train.num_components
+    - train.penalty
+    - train.regularization_C
+    - train.seed
+    - train.split
+    - train.use_pca
+  relabel:
+    cmd: python src/relabel.py
+    deps:
+      - src/relabel.py
+      - data/prepared/data.all.csv
+      - model/svm.model.pkl
+    outs:
+      - data/final/data.csv
+    metrics:
+      - reports/relabel.metrics.json:
+          cache: false
+    params:
+    - train.class_types
+    - train.degree
+    - train.dual
+    - train.gamma
+    - train.kernel
+    - train.loss
+    - train.model_type
+    - train.penalty
+    - train.regularization_C
+    - train.seed
+    - relabel.frac_noise
