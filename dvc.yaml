@@ -41,7 +41,7 @@ stages:
     - model/train.metrics.json:
         cache: false
     plots:
-    - model/classes.metrics.csv:
+    - model/class.metrics.csv:
         cache: false
     params:
     - train.class_types
@@ -68,6 +68,9 @@ stages:
     metrics:
       - reports/relabel.metrics.json:
           cache: false
+    plots:
+    - data/final/class.metrics.csv:
+        cache: false
     params:
     - train.class_types
     - train.degree

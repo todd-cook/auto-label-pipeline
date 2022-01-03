@@ -1,3 +1,16 @@
+# Copyright 2022 Todd Cook
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """`train.py` - Train model"""
 import json
 import pickle
@@ -11,15 +24,10 @@ from numpy import ndarray
 import pandas as pd
 from sklearn.svm import LinearSVC, SVC
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
-from utils import fix_path, seed_everything
-
-
-def compute_test_error(test_y: ndarray, pred_test_y: ndarray) -> float:
-    """Compute the test error for the test set."""
-    return 1.0 - np.mean(pred_test_y == test_y)  # type:ignore
+from utils import fix_path, seed_everything, multiclass_confusion_matrix_metrics
 
 
 def encode_ys(
@@ -92,18 +100,17 @@ def work() -> None:
             pca = PCA(n_components=NUM_COMPONENTS)
             xdata = pca.fit_transform(xdata)
 
+        ydata = encode_ys(df.class_type.tolist(), label_enc, default_val=UNKNOWN_TAG)
         xtrain, xtest, ytrain, ytest = train_test_split(
             xdata,
-            df.class_type.tolist(),
+            ydata,
             random_state=SEED,
             train_size=SPLIT,
-            stratify=df.class_type.tolist(),
+            stratify=ydata,
         )
         all_xtrain.append(xtrain)
-        ytrain = encode_ys(ytrain, label_enc, default_val=UNKNOWN_TAG)
         all_ytrain.extend(ytrain)
         all_xtest.append(xtest)
-        ytest = encode_ys(ytest, label_enc, default_val=UNKNOWN_TAG)
         all_ytest.extend(ytest)
     all_xtrain = np.vstack(all_xtrain)  # type:ignore
     all_ytrain = np.array(all_ytrain)  # type:ignore
@@ -124,17 +131,15 @@ def work() -> None:
         )
     svm.fit(all_xtrain, all_ytrain)  # type: ignore
     y_pred = svm.predict(all_xtest)  # type: ignore
-    test_error = compute_test_error(test_y=all_ytest, pred_test_y=y_pred)  # type: ignore
     accuracy = accuracy_score(y_true=all_ytest, y_pred=y_pred)
-    metrics_dict = {
-        "accuracy": accuracy,
-        "num_test_items": len(y_pred),
-        "test error": test_error,
-        "clf._coef": svm.coef_.tolist(),  # type: ignore
-        "theta_size": np.linalg.norm(svm.coef_),  # type: ignore
-    }
-    print(f"Results: {len(y_pred):,} test items, test error: {test_error:.3f}")
-
+    actual = label_enc.inverse_transform(all_ytest).tolist()
+    predicted = label_enc.inverse_transform(y_pred).tolist()
+    cm = confusion_matrix(actual, predicted, labels=label_enc.classes_)
+    metrics_dict = multiclass_confusion_matrix_metrics(cm=cm, labels=label_enc.classes_)
+    metrics_dict["accuracy"] = accuracy
+    metrics_dict["test_items"] = len(y_pred)
+    metrics_dict["theta_size"] = np.linalg.norm(svm.coef_)  # type: ignore
+    print(f"Results: {len(y_pred):,} test items, accuracy: {accuracy}")
     with open(fix_path("../model/train.metrics.json"), "wt") as fout:
         json.dump(metrics_dict, fout, indent=2)
     with open(fix_path("../model/svm.model.pkl"), "wb") as fout:  # type: ignore
@@ -142,7 +147,7 @@ def work() -> None:
     actual = label_enc.inverse_transform(all_ytest).tolist()
     predicted = label_enc.inverse_transform(y_pred).tolist()
     metrics_df = pd.DataFrame({"actual": actual, "predicted": predicted})
-    metrics_df.to_csv(fix_path("../model/classes.metrics.csv"), index=False)
+    metrics_df.to_csv(fix_path("../model/class.metrics.csv"), index=False)
 
 
 if __name__ == "__main__":

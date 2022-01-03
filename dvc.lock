@@ -6,8 +6,8 @@ stages:
     - python src/fetch.py --param_group fetch_model
     deps:
     - path: src/fetch.py
-      md5: 41d4291762d62f469cc7142b79b5af34
-      size: 2159
+      md5: 67f9be1163f631e658edd0723f4b73fc
+      size: 2729
     params:
       params.yaml:
         fetch_data.file: crawl-300d-2M-subword.bin
@@ -42,8 +42,8 @@ stages:
       size: 18999626217
       nfiles: 8
     - path: src/prepare.py
-      md5: 3f426787fa914f3f1bb8094e42b0879d
-      size: 12494
+      md5: f1a9a0d27ff6a76f3f9e8ab19c7ce476
+      size: 9607
     params:
       params.yaml:
         fetch_data.file: crawl-300d-2M-subword.bin
@@ -59,8 +59,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: reports/prepare.metrics.json
-      md5: bd4d2677bf4acb0b7a151a1f75d36e6e
-      size: 106
+      md5: d1e59667ae567c5ee394f615be7a3536
+      size: 68
   train:
     cmd: python src/train.py
     deps:
@@ -68,8 +68,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: src/train.py
-      md5: 9293fdfbcedbedb60fa4cae9a247bb28
-      size: 5193
+      md5: 2408c0a20a531898b1853c03aa856b1b
+      size: 5632
     params:
       params.yaml:
         train.class_types:
@@ -89,15 +89,15 @@ stages:
         train.split: 0.8
         train.use_pca: true
     outs:
-    - path: model/classes.metrics.csv
+    - path: model/class.metrics.csv
       md5: a65dfd3ef0b5dbca1bbc20578e1a553a
       size: 122443
     - path: model/svm.model.pkl
       md5: ac6d9b9b0c10ea64ef03059776fc8da2
       size: 892
     - path: model/train.metrics.json
-      md5: c48524ab4edecd3a2915988a901f4fc2
-      size: 912
+      md5: 5b84efb59b655011046f3f5e2e61d854
+      size: 345
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -108,8 +108,8 @@ stages:
       md5: ac6d9b9b0c10ea64ef03059776fc8da2
       size: 892
     - path: src/relabel.py
-      md5: fbd9359f42982f9f873282f1185f7164
-      size: 9034
+      md5: 9c80ef2d78955890e04f12fdb31b94d4
+      size: 8850
     params:
       params.yaml:
         relabel.frac_noise: 1.0
@@ -127,9 +127,12 @@ stages:
         train.regularization_C: 0.1
         train.seed: 31
     outs:
+    - path: data/final/class.metrics.csv
+      md5: 0dfb7f9672b5f221a86af1adbf5047a2
+      size: 121100
     - path: data/final/data.csv
-      md5: 6fee9b8d70aaa2c3a758f2e3cd9f2913
+      md5: 579a953596409304b1b0014ab437d2c7
       size: 154842405
     - path: reports/relabel.metrics.json
-      md5: e3e95bc32fc77c67877a9e50912c863b
-      size: 135
+      md5: 6a8544d5197536273e8fb64d7a34cd3d
+      size: 113

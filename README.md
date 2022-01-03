@@ -5,7 +5,7 @@ Goals:
 * Reproducible ML
 * Use [DVC](https://dvc.org) to build a pipeline and track experiments
 * Automatically clean noisy data labels using [Cleanlab](https://github.com/cleanlab/cleanlab) cross validation
-* Determine which [fastText](https://fasttext.cc) subword embedding performs better for semi-supervised cluster classification
+* Determine which [FastText](https://fasttext.cc) subword embedding performs better for semi-supervised cluster classification
 * Determine optimal hyperparameters through experiment tracking
 * Prepare casually labeled data for human evaluation
 
@@ -31,14 +31,34 @@ The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterize
 `dvc repro`
 
 ## View Metrics
-* `dvc metrics show`
-* `dvc metrics diff`
-* etc... see also: [DVC metrics](https://dvc.org/doc/command-reference/metrics)
+`dvc metrics show`
 
-## View Experiments
-* `dvc exp show`
-* `dvc exp diff`
-* etc... see also: [DVC Experiments](https://dvc.org/doc/command-reference/exp)
+See also: [DVC metrics](https://dvc.org/doc/command-reference/metrics)
+
+## Working with Experiments
+To see experiments:
+`dvc exp show`
+
+To create an experiment by changing a parameter:
+`dvc exp run --set-param train.split=0.9 --name my_split_ex`
+
+To compare experiments:
+`dvc exp diff`
+
+To save and share your experiment in a branch:
+`dvc exp branch my_split_ex my_split_ex_branch`
+
+See also: [DVC Experiments](https://dvc.org/doc/command-reference/exp)
+
+## View plots
+Initial Confusion matrix:
+
+`dvc plots show model/class.metrics.csv -x actual -y predicted  --template confusion`
+
+Confusion matrix after relabeling:
+`dvc plots show data/final/class.metrics.csv -x actual -y predicted  --template confusion`
+
+See also: [DVC plots](https://dvc.org/doc/command-reference/plots)
 
 ## Using/Extending the pipeline
 1. Drop your own CSV files into the `data/raw` directory
@@ -66,11 +86,13 @@ Tab separated CSV files, with the fields:
 * Language detection is an important part of data cleaning, however problematic because:
   * Modern languages sometimes "borrow" words from other languages (but not just any words!)
   * Language detection models perform inference poorly with limited data, especially just a single word.
-  * Normalization utlities, such as `unidecode` aren't helpful; (the wrong word in more reabable letters is still the wrong word).
+  * Normalization utilities, such as `unidecode` aren't helpful; (the wrong word in more readable letters is still the wrong word).
 * Experimentation parameters often have co-dependencies that would make a simple combinatorial grid search inefficient.
 
 ### Recommended readings:
-* _Confident Learning: Estimating Uncertainty in Dataset Labels_  by Curtis G. Northcutt, Lu Jiang, Isaac L. Chuang, 31 Oct 2019, https://arxiv.org/abs/1911.00068
-* _A Simple but tough-to-beat baseline for sentence embeddings_ by Sanjeev Arora, Yingyu Liang, Tengyu Ma, ICLR 2017, https://openreview.net/pdf?id=SyK00v5xx
+* _Confident Learning: Estimating Uncertainty in Dataset Labels_ by Curtis G. Northcutt, Lu Jiang, Isaac L. Chuang, 31 Oct 2019, [arxiv](https://arxiv.org/abs/1911.00068)
+* _A Simple but tough-to-beat baseline for sentence embeddings_ by Sanjeev Arora, Yingyu Liang, Tengyu Ma, ICLR 2017, [paper](https://openreview.net/pdf?id=SyK00v5xx)
+* _Support Vector Clustering_ by Asa Ben-Hur, David Horn, Hava T. Siegelmann, Vladimir Vapnik, November 2001 Journal of Machine Learning Research 2 (12):125-137, DOI:10.1162/15324430260185565, [paper](https://www.jmlr.org/papers/volume2/horn01a/horn01a.pdf)
+* _SVM clustering_ by Winters-Hilt, S., Merat, S. BMC Bioinformatics 8, S18 (2007). [link](https://doi.org/10.1186/1471-2105-8-S7-S18), [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-S7-S18)
 
 Note: this repo layout borrows heavily from the [Cookie Cutter Data Science Layout](https://drivendata.github.io/cookiecutter-data-science ) If you're not familiar with it, please check it out.

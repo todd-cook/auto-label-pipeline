@@ -1,20 +1,32 @@
+# Copyright 2022 Todd Cook
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """`relabel.py` - relabel noisy data with Cleanlab."""
 import json
 from glob import glob
-from typing import Any
 import yaml
 
 import cleanlab
 import numpy as np
 import pandas as pd
 from cleanlab.pruning import get_noise_indices
-from numpy import ndarray
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC, LinearSVC
 from tqdm import tqdm
 
 from train import encode_ys
-from utils import fix_path, seed_everything
+from utils import fix_path, print_label_corrections, seed_everything
 
 
 class WrappedSVC(SVC):  # Inherits sklearn base classifier
@@ -58,6 +70,7 @@ def work() -> None:
     with open(fix_path("../params.yaml"), "r") as fd:
         params = yaml.safe_load(fd)
     # Note: we share some parameters with previous stages
+    SPLIT = params["train"]["split"]
     SEED = params["train"]["seed"]
     REGULARIZATION_C = params["train"]["regularization_C"]
     PENALTY = params["train"]["penalty"]
@@ -185,74 +198,51 @@ def work() -> None:
     with open(fix_path("../reports/relabel.metrics.json"), "wt") as fout:
         json.dump(
             {
-                "num_label_errors": len(ordered_label_errors),
-                "num_labels_total": len(df),
-                "class_label_distribution": {
+                "label_errors": len(ordered_label_errors),
+                "labels_total": len(df),
+                "class_dist": {
                     key: len(df.query(f"class_type == '{key}' ")) for key in CLASS_TYPES
                 },
             },
             fout,
         )
-    print("Done!")
 
-
-def compute_confident_joint(psx: ndarray, y: ndarray) -> Any:
-    """
-    Compute the confident_join for Cleanlab
-    :param psx:
-    :param y:
-    :return:
-    """
-    # Verify inputs
-    psx = np.asarray(psx)
-
-    # Find the number of unique classes if K is not given
-    K = len(np.unique(y))
-
-    # Estimate the probability thresholds for confident counting
-    # You can specify these thresholds yourself if you want
-    # as you may want to optimize them using a validation set.
-    # By default (and provably so) they are set to the average class prob.
-    thresholds = [np.mean(psx[:, k][y == k]) for k in range(K)]  # P(s^=k|s=k)
-    thresholds = np.asarray(thresholds)  # type:ignore
-
-    # Compute confident joint
-    confident_joint = np.zeros((K, K), dtype=int)
-    for i, row in enumerate(psx):
-        y_label = y[i]
-        # Find out how many classes each example is confidently labeled as
-        confident_bins = row >= thresholds - 1e-6  # type:ignore
-        num_confident_bins = sum(confident_bins)
-        # If more than one conf class, inc the count of the max prob class
-        if num_confident_bins == 1:
-            confident_joint[y_label][np.argmax(confident_bins)] += 1
-        elif num_confident_bins > 1:
-            confident_joint[y_label][np.argmax(row)] += 1
-
-    # Normalize confident joint (use cleanlab, trust me on this)
-    confident_joint = cleanlab.latent_estimation.calibrate_confident_joint(
-        confident_joint, y
+    print("Creating final metrics")
+    xdata = []
+    for _, row in tqdm(df.iterrows()):
+        values = row["xdata"].replace("\n", " ").replace("[", " ").replace("]", " ")
+        xdata.append(
+            np.array([float(tmp) for tmp in values.split() if tmp])
+        )  # type:ignore
+    xdata = np.vstack(xdata)  # type: ignore
+    ydata = encode_ys(df.class_type.tolist(), label_enc, default_val=UNKNOWN_TAG)
+    xtrain, xtest, ytrain, ytest = train_test_split(
+        xdata,
+        ydata,
+        random_state=SEED,
+        train_size=SPLIT,
+        stratify=ydata,
     )
-    cleanlab.util.print_joint_matrix(confident_joint)
-    return confident_joint
-
-
-def print_label_corrections(df, k=20) -> None:
-    """
-    Pretty print noisy labels, before and after
-    :param df: the dataframe
-    :param k: the number of items to print
-    :return: None
-    """
-    print(f"Showing top {k} mislabeled entries for your log gazing enjoyment:")
-    for _, row in (
-        df.query("mislabeled_rank > 1 and mislabeled_rank < 20")
-        .sort_values("mislabeled_rank")
-        .iterrows()
-    ):
-        print(
-            f"{row['text_data']} : previous label: {row['previous_class_type']}, corrected label: {row['class_type']} "
+    svm = None
+    if MODEL_TYPE.upper() == "LINEARSVC":
+        svm = LinearSVC(
+            random_state=SEED, C=REGULARIZATION_C, penalty=PENALTY, loss=LOSS, dual=DUAL
         )
+    if MODEL_TYPE.upper() == "SVM":
+        svm = SVC(
+            random_state=SEED,
+            C=REGULARIZATION_C,
+            degree=DEGREE,
+            gamma=GAMMA,
+            kernel=KERNEL,
+        )
+    svm.fit(xtrain, ytrain)  # type: ignore
+    y_pred = svm.predict(xtest)  # type: ignore
+    actual = label_enc.inverse_transform(ytest).tolist()
+    predicted = label_enc.inverse_transform(y_pred).tolist()
+    metrics_df = pd.DataFrame({"actual": actual, "predicted": predicted})
+    metrics_df.to_csv(fix_path("../data/final/class.metrics.csv"), index=False)
+    print("Done!")
 
 
 if __name__ == "__main__":

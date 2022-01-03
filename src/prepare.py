@@ -1,113 +1,38 @@
+# Copyright 2022 Todd Cook
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """`prepare.py` - Extract and transform the data for model building."""
 import json
 import pickle
 import string
-from collections import defaultdict, namedtuple, Counter
+from collections import defaultdict, Counter
 from glob import glob
-from typing import Dict, List, Tuple, ValuesView
+from typing import Dict
 import yaml
 
 from tqdm import tqdm
 import numpy as np
-from numpy import ndarray
+
 import pandas as pd
 import fasttext
-from sklearn.decomposition import TruncatedSVD
+
 from nltk.corpus import stopwords
-from utils import fix_path
-
-# The following functions are borrowed from my open source contributions
-# for CLTK https://github.com/cltk/cltk/blob/master/src/cltk/embeddings/sentence.py
-def rescale_idf(val: float, min_idf: float, max_idf: float) -> float:
-    """Rescale idf values."""
-    return (val - min_idf) / (max_idf - min_idf)
-
-
-def compute_pc(x: ndarray, npc: int = 1) -> ndarray:
-    """Compute the principal components. DO NOT MAKE THE DATA ZERO MEAN!
-
-    :param x: X[i,:] is a data point
-    :param npc: number of principal components to remove
-    :return: component_[i,:] is the i-th pc
-
-    This has been adapted from the SIF paper code: `https://openreview.net/pdf?id=SyK00v5xx`.
-    """
-    svd: TruncatedSVD = TruncatedSVD(n_components=npc, n_iter=7, random_state=0)
-    svd.fit(x)
-    return svd.components_  # type:ignore
-
-
-def remove_pc(x: ndarray, npc: int = 1) -> ndarray:
-    """Remove the projection on the principal components. Calling this on a collection of sentence embeddings, prior to comparison, may improve accuracy.
-
-    :param x: X[i,:] is a data point
-    :param npc: number of principal components to remove
-    :return: XX[i, :] is the data point after removing its projection
-
-    This has been adapted from the SIF paper code: `https://openreview.net/pdf?id=SyK00v5xx`.
-    """
-    pc: ndarray = compute_pc(x, npc)
-    if npc == 1:
-        return x - x.dot(pc.transpose()) * pc  # type:ignore
-    return x - x.dot(pc.transpose()).dot(pc)  # type:ignore
-
-
-Token = namedtuple("Token", "string embedding")
-
-
-def get_sent_embeddings(
-    sent: List[Token],
-    idf_model: Dict[str, float],
-    min_idf: float,
-    max_idf: float,
-    dimensions: int = 300,
-) -> ndarray:
-    """Provides the weighted average of a sentence's word vectors.
-
-    Expectations:
-    Word can only appear once in a sentence, multiple occurrences are collapsed.
-    Must have 2 or more embeddings, otherwise Principle Component cannot be found and removed.
-
-    :param sent: ``Sentence``
-    :param idf_model: a dictionary of tokens and idf values
-    :param min_idf: the min idf score to use for scaling
-    :param max_idf: the max idf score to use for scaling
-    :param dimensions: the number of dimensions of the embedding
-
-    :return ndarray: values of the sentence embedding, or returns an array of zeroes if no sentence embedding could be computed.
-    """
-    map_word_embedding: Dict[str, Tuple[float, ndarray]] = {
-        token.string: (
-            rescale_idf(
-                idf_model.get(token.string.lower()), min_idf, max_idf  # type:ignore
-            ),
-            token.embedding,
-        )
-        for token in sent
-        if not np.all((token.embedding == 0))  # skip processing empty embeddings
-    }  # type:ignore
-    weight_embedding_tuple: ValuesView = map_word_embedding.values()
-
-    if len(weight_embedding_tuple) == 0:
-        return np.zeros(dimensions)
-    if len(weight_embedding_tuple) == 1:
-        return sent[0].embedding  # type:ignore
-
-    weights, embeddings = zip(*weight_embedding_tuple)
-    if sum(weights) == 0:
-        return np.zeros(dimensions)
-    scale_factor: float = 1 / sum(weights)  # type:ignore
-    scaled_weights: List[float] = [weight * scale_factor for weight in weights]
-    scaled_values: ndarray = np.array(scaled_weights)
-    # Apply our weighted terms to the adjusted embeddings
-    weighted_embeds: ndarray = embeddings * scaled_values[:, None]
-    return np.sum(weighted_embeds, axis=0)  # type:ignore
-
-
-def fast_text_prediction_to_language_code(res: List[Tuple[str, str]]) -> List[str]:
-    """Convert fastText language predictions to language codes"""
-    labels, _ = res
-    return [tmp[tmp.rfind("_") + 1 :] for tmp in labels]
+from utils import (
+    fast_text_prediction_to_language_code,
+    fix_path,
+    get_sent_embeddings,
+    Token,
+)
 
 
 # pylint: disable=too-many-locals,too-many-statements,too-many-branches,too-many-nested-blocks
@@ -275,11 +200,18 @@ def work() -> None:
     alldfs = pd.concat(dfs)
     print(f"Total items before dropping 2nd+ dupes: {len(alldfs):,}")
     text_data_cnt: Dict[int, int] = Counter(alldfs.text_data.tolist())
-    dupe_texts = [key for key, val in text_data_cnt.items() if val > 1]
-    print(f"Marking duplicates as class_type: {UNKNOWN_TAG}")
-    alldfs["class_type"].mask(
-        alldfs.text_data.isin(dupe_texts), other=UNKNOWN_TAG, inplace=True
-    )
+    dupe_texts = {key for key, val in text_data_cnt.items() if val > 1}
+    print(f"Marking {len(dupe_texts):,} duplicates as class_type: {UNKNOWN_TAG}")
+    class_labels = alldfs["class_type"].tolist()
+    # i =0
+    # for idx, row in alldfs.iterrows():
+    #     if row['text_data'] in dupe_texts:
+    #         class_labels[i] = UNKNOWN_TAG
+    #     i+=1
+    for i, text_data in enumerate(alldfs["text_data"]):
+        if text_data in dupe_texts:
+            class_labels[i] = UNKNOWN_TAG
+    alldfs["class_type"] = class_labels
     alldfs.drop_duplicates(subset=["text_data"], keep="first", inplace=True)
     print(f"Total number of labeled items: {len(alldfs):,}")
     alldfs.to_csv(
@@ -290,9 +222,9 @@ def work() -> None:
     with open(fix_path("../reports/prepare.metrics.json"), "wt") as fout:
         json.dump(
             {
-                "total_candidates": total_candidates,
-                "total_filtered_by_language": total_filtered_by_language,
-                "total_filtered_by_count_threshold": total_filtered_by_count_threshold,
+                "candidates": total_candidates,
+                "filtered_lang": total_filtered_by_language,
+                "filtered_count": total_filtered_by_count_threshold,
             },
             fout,
         )
