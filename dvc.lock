@@ -87,17 +87,17 @@ stages:
         train.regularization_C: 0.1
         train.seed: 31
         train.split: 0.8
-        train.use_pca: false
+        train.use_pca: true
     outs:
     - path: model/class.metrics.csv
-      md5: f11fb0fad0031d3bcff759de0213cc38
-      size: 122375
+      md5: a65dfd3ef0b5dbca1bbc20578e1a553a
+      size: 122443
     - path: model/svm.model.pkl
-      md5: c091f5447a57c891357453a63918011c
-      size: 7881
+      md5: ac6d9b9b0c10ea64ef03059776fc8da2
+      size: 892
     - path: model/train.metrics.json
-      md5: 2f4e991a48b135f75f24a94a6afb49d9
-      size: 344
+      md5: 5b84efb59b655011046f3f5e2e61d854
+      size: 345
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -105,8 +105,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: c091f5447a57c891357453a63918011c
-      size: 7881
+      md5: ac6d9b9b0c10ea64ef03059776fc8da2
+      size: 892
     - path: src/relabel.py
       md5: 5930dc8727ed5461b793593e40146961
       size: 8850
@@ -131,7 +131,7 @@ stages:
       md5: 0dfb7f9672b5f221a86af1adbf5047a2
       size: 121100
     - path: data/final/data.csv
-      md5: 47d25500c6224fca1ce2b15f593eb475
+      md5: 7bf4627a1f7295d8ed4e1c6dc57edf61
       size: 154842405
     - path: reports/relabel.metrics.json
       md5: 6a8544d5197536273e8fb64d7a34cd3d

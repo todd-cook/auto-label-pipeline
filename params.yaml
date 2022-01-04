@@ -26,7 +26,7 @@ train:
   penalty: l2
   loss: squared_hinge
   dual: true
-  use_pca: false
+  use_pca: true
   num_components: 9
   class_types: [employer, occupation, UNK]
   kernel: poly

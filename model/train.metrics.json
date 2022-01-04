@@ -1,0 +1,17 @@
+{
+  "UNK.TP": 0,
+  "employer.TP": 5171,
+  "occupation.TP": 732,
+  "UNK.FP": 0,
+  "employer.FP": 445,
+  "occupation.FP": 273,
+  "UNK.TN": 6439,
+  "employer.TN": 811,
+  "occupation.TN": 5274,
+  "UNK.FN": 182,
+  "employer.FN": 194,
+  "occupation.FN": 342,
+  "accuracy": 0.8915571665911494,
+  "test_items": 6621,
+  "theta_size": 10.742408117050678
+}
