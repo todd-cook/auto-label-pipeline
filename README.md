@@ -47,7 +47,12 @@ To create an experiment by changing a parameter:
 `dvc exp run --set-param train.split=0.9 --name my_split_ex`
 
 To compare experiments:
-`dvc exp diff`
+
+`dvc exp diff [experiment branch name] [experiment branch 2 name]`
+
+e.g.:
+
+`dvc exp diff svc_linear_ex svc_rbf_ex`
 
 To save and share your experiment in a branch:
 `dvc exp branch my_split_ex my_split_ex_branch`
