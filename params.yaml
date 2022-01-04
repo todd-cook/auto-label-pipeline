@@ -3,36 +3,36 @@ fetch_data:
 #  file: "cc.en.300.bin"
 #  uri: "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.bin.gz"
 #  https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip
-  file: "crawl-300d-2M-subword.bin"
-  uri: "https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip"
+  file: crawl-300d-2M-subword.bin
+  uri: https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip
 fetch_model:
-  file: "lid.176.ftz"
-  uri: "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.ftz"
+  file: lid.176.ftz
+  uri: https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.ftz
 prepare:
   # The embeddings file parameter is shared/borrowed from the `fetch_data` stage
   #  embeddings_file: "cc.en.300.bin"
   embeddings_dim: 300
   filter_lang_bool: true
-  filter_lang: "en"
-  lang_detect_model: "lid.176.ftz"
-  stopwords_filter_lang: "english"
+  filter_lang: en
+  lang_detect_model: lid.176.ftz
+  stopwords_filter_lang: english
   filter_count_gteq: 2
-  tfidf_dict_pickle_file: ""
-  unknown_tag: "UNK"
+  tfidf_dict_pickle_file: ''
+  unknown_tag: UNK
 train:
   seed: 31
   split: 0.8
   regularization_C: 0.1
-  penalty: "l2"
-  loss: "squared_hinge"
+  penalty: l2
+  loss: squared_hinge
   dual: true
-  use_pca: true
+  use_pca: false
   num_components: 9
-  class_types: ["employer", "occupation", "UNK"]
-  kernel: "rbf"
+  class_types: [employer, occupation, UNK]
+  kernel: poly
   degree: 3
-  gamma: "scale"
-  model_type: "LinearSVC"
+  gamma: scale
+  model_type: LinearSVC
 relabel:
   # The number of indices returned is specified by frac_noise. When
   # frac_noise = 1.0, all "confident" estimated noise indices are returned.

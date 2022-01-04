@@ -131,7 +131,7 @@ def work() -> None:
             ),
         )
 
-    if MODEL_TYPE.upper() == "SVM":
+    if MODEL_TYPE.upper() == "SVC":
         psx = cleanlab.latent_estimation.estimate_cv_predicted_probabilities(
             X,
             y,
@@ -164,7 +164,7 @@ def work() -> None:
             loss=LOSS,
             dual=DUAL,
         )
-    if MODEL_TYPE.upper() == "SVM":
+    if MODEL_TYPE.upper() == "SVC":
         svm = SVC(
             random_state=SEED,
             C=REGULARIZATION_C,
@@ -228,7 +228,7 @@ def work() -> None:
         svm = LinearSVC(
             random_state=SEED, C=REGULARIZATION_C, penalty=PENALTY, loss=LOSS, dual=DUAL
         )
-    if MODEL_TYPE.upper() == "SVM":
+    if MODEL_TYPE.upper() == "SVC":
         svm = SVC(
             random_state=SEED,
             C=REGULARIZATION_C,

@@ -121,7 +121,7 @@ def work() -> None:
         svm = LinearSVC(
             random_state=SEED, C=REGULARIZATION_C, penalty=PENALTY, loss=LOSS, dual=DUAL
         )
-    if MODEL_TYPE.upper() == "SVM":
+    if MODEL_TYPE.upper() == "SVC":
         svm = SVC(
             random_state=SEED,
             C=REGULARIZATION_C,
@@ -138,7 +138,7 @@ def work() -> None:
     metrics_dict = multiclass_confusion_matrix_metrics(cm=cm, labels=label_enc.classes_)
     metrics_dict["accuracy"] = accuracy
     metrics_dict["test_items"] = len(y_pred)
-    metrics_dict["theta_size"] = np.linalg.norm(svm.coef_)  # type: ignore
+    metrics_dict["theta_size"] = np.linalg.norm(svm.coef_) if MODEL_TYPE.upper() == "LINEARSVC" else 0  # type: ignore
     print(f"Results: {len(y_pred):,} test items, accuracy: {accuracy}")
     with open(fix_path("../model/train.metrics.json"), "wt") as fout:
         json.dump(metrics_dict, fout, indent=2)

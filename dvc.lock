@@ -68,8 +68,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: src/train.py
-      md5: 2408c0a20a531898b1853c03aa856b1b
-      size: 5632
+      md5: 46e3f6aa1fbde65ff73f61f49beca9d2
+      size: 5676
     params:
       params.yaml:
         train.class_types:
@@ -79,7 +79,7 @@ stages:
         train.degree: 3
         train.dual: true
         train.gamma: scale
-        train.kernel: rbf
+        train.kernel: poly
         train.loss: squared_hinge
         train.model_type: LinearSVC
         train.num_components: 9
@@ -87,17 +87,17 @@ stages:
         train.regularization_C: 0.1
         train.seed: 31
         train.split: 0.8
-        train.use_pca: true
+        train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: a65dfd3ef0b5dbca1bbc20578e1a553a
-      size: 122443
+      md5: f11fb0fad0031d3bcff759de0213cc38
+      size: 122375
     - path: model/svm.model.pkl
-      md5: ac6d9b9b0c10ea64ef03059776fc8da2
-      size: 892
+      md5: c091f5447a57c891357453a63918011c
+      size: 7881
     - path: model/train.metrics.json
-      md5: 5b84efb59b655011046f3f5e2e61d854
-      size: 345
+      md5: 2f4e991a48b135f75f24a94a6afb49d9
+      size: 344
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -105,10 +105,10 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: ac6d9b9b0c10ea64ef03059776fc8da2
-      size: 892
+      md5: c091f5447a57c891357453a63918011c
+      size: 7881
     - path: src/relabel.py
-      md5: 9c80ef2d78955890e04f12fdb31b94d4
+      md5: 5930dc8727ed5461b793593e40146961
       size: 8850
     params:
       params.yaml:
@@ -120,7 +120,7 @@ stages:
         train.degree: 3
         train.dual: true
         train.gamma: scale
-        train.kernel: rbf
+        train.kernel: poly
         train.loss: squared_hinge
         train.model_type: LinearSVC
         train.penalty: l2
@@ -131,7 +131,7 @@ stages:
       md5: 0dfb7f9672b5f221a86af1adbf5047a2
       size: 121100
     - path: data/final/data.csv
-      md5: 579a953596409304b1b0014ab437d2c7
+      md5: 47d25500c6224fca1ce2b15f593eb475
       size: 154842405
     - path: reports/relabel.metrics.json
       md5: 6a8544d5197536273e8fb64d7a34cd3d
