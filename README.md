@@ -24,8 +24,12 @@ The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterize
 ### Setup env
 `conda create --name auto-label-pipeline python=3.9`
  
+`conda activate auto-label-pipeline`
+
 ### Install requirements
-`conda install --file requirements.txt`
+`pip install -r requirements.txt`
+
+If you're going to modify the source, also install the `requirements-dev.txt` file
 
 ## Reproduce the pipeline
 `dvc repro`
