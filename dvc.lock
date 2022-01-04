@@ -81,7 +81,7 @@ stages:
         train.gamma: scale
         train.kernel: poly
         train.loss: squared_hinge
-        train.model_type: LinearSVC
+        train.model_type: SVC
         train.num_components: 9
         train.penalty: l2
         train.regularization_C: 0.1
@@ -90,14 +90,14 @@ stages:
         train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: f11fb0fad0031d3bcff759de0213cc38
-      size: 122375
+      md5: b59b78141e06c4def5b660c3e224324b
+      size: 121783
     - path: model/svm.model.pkl
-      md5: c091f5447a57c891357453a63918011c
-      size: 7881
+      md5: cb91cbe8492b7c2f60c99da61b31d032
+      size: 19249894
     - path: model/train.metrics.json
-      md5: 2f4e991a48b135f75f24a94a6afb49d9
-      size: 344
+      md5: 40e8269076d2afb95e9eeedc143d2ee7
+      size: 325
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -105,8 +105,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: c091f5447a57c891357453a63918011c
-      size: 7881
+      md5: cb91cbe8492b7c2f60c99da61b31d032
+      size: 19249894
     - path: src/relabel.py
       md5: 5930dc8727ed5461b793593e40146961
       size: 8850
@@ -122,17 +122,17 @@ stages:
         train.gamma: scale
         train.kernel: poly
         train.loss: squared_hinge
-        train.model_type: LinearSVC
+        train.model_type: SVC
         train.penalty: l2
         train.regularization_C: 0.1
         train.seed: 31
     outs:
     - path: data/final/class.metrics.csv
-      md5: 0dfb7f9672b5f221a86af1adbf5047a2
-      size: 121100
+      md5: 1c4d3d242d955bdecf1bc89bb5c915b3
+      size: 121449
     - path: data/final/data.csv
-      md5: 47d25500c6224fca1ce2b15f593eb475
-      size: 154842405
+      md5: 2fbcc5de9b869e63abdb6de9e86f4b59
+      size: 154837538
     - path: reports/relabel.metrics.json
-      md5: 6a8544d5197536273e8fb64d7a34cd3d
+      md5: 4a00e4457e8dce042d066aae05584d41
       size: 113

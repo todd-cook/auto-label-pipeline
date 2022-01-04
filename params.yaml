@@ -32,7 +32,7 @@ train:
   kernel: poly
   degree: 3
   gamma: scale
-  model_type: LinearSVC
+  model_type: SVC
 relabel:
   # The number of indices returned is specified by frac_noise. When
   # frac_noise = 1.0, all "confident" estimated noise indices are returned.
