@@ -79,7 +79,7 @@ stages:
         train.degree: 3
         train.dual: true
         train.gamma: scale
-        train.kernel: poly
+        train.kernel: rbf
         train.loss: squared_hinge
         train.model_type: SVC
         train.num_components: 9
@@ -90,14 +90,14 @@ stages:
         train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: b59b78141e06c4def5b660c3e224324b
-      size: 121783
+      md5: 442882dae43244c08c6e3856def69aed
+      size: 122247
     - path: model/svm.model.pkl
-      md5: cb91cbe8492b7c2f60c99da61b31d032
-      size: 19249894
+      md5: f3eb1c239e81b4d380281da42d18e85f
+      size: 14775313
     - path: model/train.metrics.json
-      md5: 40e8269076d2afb95e9eeedc143d2ee7
-      size: 325
+      md5: 154f8c74b68af2d57423588f38a2e0ea
+      size: 326
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -105,8 +105,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: cb91cbe8492b7c2f60c99da61b31d032
-      size: 19249894
+      md5: f3eb1c239e81b4d380281da42d18e85f
+      size: 14775313
     - path: src/relabel.py
       md5: 5930dc8727ed5461b793593e40146961
       size: 8850
@@ -120,7 +120,7 @@ stages:
         train.degree: 3
         train.dual: true
         train.gamma: scale
-        train.kernel: poly
+        train.kernel: rbf
         train.loss: squared_hinge
         train.model_type: SVC
         train.penalty: l2
@@ -128,11 +128,11 @@ stages:
         train.seed: 31
     outs:
     - path: data/final/class.metrics.csv
-      md5: 1c4d3d242d955bdecf1bc89bb5c915b3
-      size: 121449
+      md5: 09032a512a616ab98f5854d692f17e72
+      size: 121953
     - path: data/final/data.csv
-      md5: 2fbcc5de9b869e63abdb6de9e86f4b59
-      size: 154837538
+      md5: 488fb1cd733945bc240de8f83d3490c3
+      size: 154836670
     - path: reports/relabel.metrics.json
-      md5: 4a00e4457e8dce042d066aae05584d41
+      md5: f6a97994ead2dcaf8721a767281d599c
       size: 113

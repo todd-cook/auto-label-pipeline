@@ -29,7 +29,7 @@ train:
   use_pca: false
   num_components: 9
   class_types: [employer, occupation, UNK]
-  kernel: poly
+  kernel: rbf
   degree: 3
   gamma: scale
   model_type: SVC
