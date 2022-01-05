@@ -40,16 +40,28 @@ If you're going to modify the source, also install the `requirements-dev.txt` fi
 See also: [DVC metrics](https://dvc.org/doc/command-reference/metrics)
 
 ## Working with Experiments
-To see experiments:
+To see your local experiments:
+
 `dvc exp show`
 
+Experiments that have been turned into a branch can be used directly in commands:
+
+`dvc exp diff svc_linear_ex svc_rbf_ex`  
+
 To create an experiment by changing a parameter:
+
 `dvc exp run --set-param train.split=0.9 --name my_split_ex`
 
 To compare experiments:
-`dvc exp diff`
+
+`dvc exp diff [experiment branch name] [experiment branch 2 name]`
+
+e.g.:
+
+`dvc exp diff svc_linear_ex svc_rbf_ex`
 
 To save and share your experiment in a branch:
+
 `dvc exp branch my_split_ex my_split_ex_branch`
 
 See also: [DVC Experiments](https://dvc.org/doc/command-reference/exp)
@@ -60,6 +72,7 @@ Initial Confusion matrix:
 `dvc plots show model/class.metrics.csv -x actual -y predicted  --template confusion`
 
 Confusion matrix after relabeling:
+
 `dvc plots show data/final/class.metrics.csv -x actual -y predicted  --template confusion`
 
 See also: [DVC plots](https://dvc.org/doc/command-reference/plots)
