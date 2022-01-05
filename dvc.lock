@@ -10,8 +10,8 @@ stages:
       size: 2729
     params:
       params.yaml:
-        fetch_data.file: crawl-300d-2M-subword.bin
-        fetch_data.uri: https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip
+        fetch_data.file: cc.en.300.bin
+        fetch_data.uri: https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.bin.gz
         fetch_model.file: lid.176.ftz
         fetch_model.uri: https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.ftz
   fetch_data:
@@ -46,7 +46,7 @@ stages:
       size: 9607
     params:
       params.yaml:
-        fetch_data.file: crawl-300d-2M-subword.bin
+        fetch_data.file: cc.en.300.bin
         prepare.embeddings_dim: 300
         prepare.filter_count_gteq: 2
         prepare.filter_lang: en
@@ -56,8 +56,8 @@ stages:
         prepare.tfidf_dict_pickle_file: ''
     outs:
     - path: data/prepared/data.all.csv
-      md5: 0346c908967902a9b8b3f04a66b125e8
-      size: 154638900
+      md5: 42f3a17dd4b262ed80b0f481a881c480
+      size: 148767803
     - path: reports/prepare.metrics.json
       md5: d1e59667ae567c5ee394f615be7a3536
       size: 68
@@ -65,8 +65,8 @@ stages:
     cmd: python src/train.py
     deps:
     - path: data/prepared/data.all.csv
-      md5: 0346c908967902a9b8b3f04a66b125e8
-      size: 154638900
+      md5: 42f3a17dd4b262ed80b0f481a881c480
+      size: 148767803
     - path: src/train.py
       md5: 46e3f6aa1fbde65ff73f61f49beca9d2
       size: 5676
@@ -90,22 +90,22 @@ stages:
         train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: f11fb0fad0031d3bcff759de0213cc38
-      size: 122375
+      md5: 12801b335a2b2da40b77bc482ae3b14b
+      size: 122427
     - path: model/svm.model.pkl
-      md5: c091f5447a57c891357453a63918011c
+      md5: 6561d025cda2e64e10e878a63f79f4b1
       size: 7881
     - path: model/train.metrics.json
-      md5: 2f4e991a48b135f75f24a94a6afb49d9
+      md5: 8c16f25b9d471e43d341eca602a4a5c3
       size: 344
   relabel:
     cmd: python src/relabel.py
     deps:
     - path: data/prepared/data.all.csv
-      md5: 0346c908967902a9b8b3f04a66b125e8
-      size: 154638900
+      md5: 42f3a17dd4b262ed80b0f481a881c480
+      size: 148767803
     - path: model/svm.model.pkl
-      md5: c091f5447a57c891357453a63918011c
+      md5: 6561d025cda2e64e10e878a63f79f4b1
       size: 7881
     - path: src/relabel.py
       md5: 5930dc8727ed5461b793593e40146961
@@ -128,11 +128,11 @@ stages:
         train.seed: 31
     outs:
     - path: data/final/class.metrics.csv
-      md5: 0dfb7f9672b5f221a86af1adbf5047a2
-      size: 121100
+      md5: 869c87f9e1dbc6865179f716b39bf560
+      size: 121050
     - path: data/final/data.csv
-      md5: bb1457bf8cf20b4647efe947017a6ca5
-      size: 154842405
+      md5: 7a63229704cc7907946e76cc69247bd2
+      size: 148972052
     - path: reports/relabel.metrics.json
-      md5: 6a8544d5197536273e8fb64d7a34cd3d
+      md5: b4aa72935227c32e7b16727ff5368614
       size: 113

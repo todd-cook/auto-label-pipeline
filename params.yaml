@@ -1,10 +1,10 @@
 # `params.yaml` - Pipeline parameters
 fetch_data:
-#  file: "cc.en.300.bin"
-#  uri: "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.bin.gz"
+  file: "cc.en.300.bin"
+  uri: "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.bin.gz"
 #  https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip
-  file: crawl-300d-2M-subword.bin
-  uri: https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip
+#  file: crawl-300d-2M-subword.bin
+#  uri: https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M-subword.zip
 fetch_model:
   file: lid.176.ftz
   uri: https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.ftz
