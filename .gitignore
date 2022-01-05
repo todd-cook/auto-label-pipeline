@@ -51,6 +51,3 @@ _templates
 
 # pytest
 .pytest_cache
-# https://dvc.org/doc/command-reference/plots
-# We recommend to track these source image files with DVC instead of Git, to prevent the repository from bloating.
-/dvc_plots/
