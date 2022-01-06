@@ -103,6 +103,8 @@ The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterize
 
 If you're going to modify the source, also install the `requirements-dev.txt` file
 
+***
+
 ## Reproduce the pipeline results locally
 `dvc repro`
 
@@ -153,6 +155,8 @@ Confusion matrix after relabeling:
 `dvc plots show data/final/class.metrics.csv -x actual -y predicted  --template confusion`
 
 See also: [DVC plots](https://dvc.org/doc/command-reference/plots)
+
+***
 
 ### Conclusions
 * For relabeling and cleaning, it's important to have more than two labels, and to specifying an `UNK` label for: unknown; labels spanning multiple groups; or low confidence support. 
