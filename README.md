@@ -9,6 +9,9 @@ Goals:
 * Determine optimal hyperparameters through experiment tracking
 * Prepare casually labeled data for human evaluation
 
+### Demo: View Experiments recorded in git branches:
+[![asciicast](https://asciinema.org/a/460157.svg)](https://asciinema.org/a/460157)
+
 ## The Data
 For our working demo, we will purify some of the slightly noisy/dirty labels found in Wikidata people entries for attributes for Employers and Occupations. Our initial data labels have been harvested from a [json dump of Wikidata](https://dumps.wikimedia.org/wikidatawiki/entities), the [Kensho Wikidata dataset](https://www.kaggle.com/kenshoresearch/kensho-derived-wikimedia-data), and this [notebook script](https://github.com/todd-cook/ML-You-Can-Use/blob/master/getting_data/extracting_occupation_and_employer_data_from_wikidata.ipynb) for extracting the data.
 
@@ -18,7 +21,7 @@ For our working demo, we will purify some of the slightly noisy/dirty labels fou
 * Train
 * Relabel
 
-For more info, see the [README](src/README.md) in the [src](./src) folder.
+For details, see the [README](src/README.md) in the [src](./src) folder.
 The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterized via [params.yaml](params.yaml).
 
 ### Setup env
@@ -59,6 +62,8 @@ To compare experiments:
 e.g.:
 
 `dvc exp diff svc_linear_ex svc_rbf_ex`
+
+`dvc exp diff svc_poly_ex svc_rbf_ex`
 
 To save and share your experiment in a branch:
 
