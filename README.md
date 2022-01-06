@@ -2,7 +2,7 @@
 A practical ML pipeline for data labeling with experiment tracking using [DVC](https://dvc.org)
 
 Goals: 
-* Reproducible ML
+* Demonstrate reproducible ML
 * Use [DVC](https://dvc.org) to build a pipeline and track experiments
 * Automatically clean noisy data labels using [Cleanlab](https://github.com/cleanlab/cleanlab) cross validation
 * Determine which [FastText](https://fasttext.cc) subword embedding performs better for semi-supervised cluster classification
@@ -60,15 +60,15 @@ The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterize
 │ │ └── data.all.csv
 │ └── raw                   # <-- Directory with raw data; populated by pipeline's fetch stage
 │     ├── README.md
-│     ├── cc.en.300.bin
-│     ├── crawl-300d-2M-subword.bin
+│     ├── cc.en.300.bin               # <-- Fasttext binary model file, creative commons 
+│     ├── crawl-300d-2M-subword.bin   # <-- Fasttext binary model file, common crawl
 │     ├── crawl-300d-2M-subword.vec
-│     ├── employers.wikidata.csv
+│     ├── employers.wikidata.csv      # <-- Our initial data, 1 set of class labels 
 │     ├── lid.176.ftz
-│     └── occupations.wikidata.csv
-├── dvc.lock
+│     └── occupations.wikidata.csv    # <-- Our initial data, 1 set of class labels
+├── dvc.lock                # <-- DVC internal state tracking file
 ├── dvc.yaml                # <-- DVC project configuration file
-├── dvc_plots
+├── dvc_plots               # <-- Temp directory for DVC plots; not tracked by git
 │ └── README.md
 ├── model
 │ ├── class.metrics.csv
@@ -173,4 +173,4 @@ See also: [DVC plots](https://dvc.org/doc/command-reference/plots)
 * _Support Vector Clustering_ by Asa Ben-Hur, David Horn, Hava T. Siegelmann, Vladimir Vapnik, November 2001 Journal of Machine Learning Research 2 (12):125-137, DOI:10.1162/15324430260185565, [paper](https://www.jmlr.org/papers/volume2/horn01a/horn01a.pdf)
 * _SVM clustering_ by Winters-Hilt, S., Merat, S. BMC Bioinformatics 8, S18 (2007). [link](https://doi.org/10.1186/1471-2105-8-S7-S18), [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-8-S7-S18)
 
-Note: this repo layout borrows heavily from the [Cookie Cutter Data Science Layout](https://drivendata.github.io/cookiecutter-data-science ) If you're not familiar with it, please check it out.
+Note: this repo layout borrows heavily from the [Cookie Cutter Data Science Layout](https://drivendata.github.io/cookiecutter-data-science) If you're not familiar with it, please check it out.
