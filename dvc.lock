@@ -68,8 +68,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: src/train.py
-      md5: 46e3f6aa1fbde65ff73f61f49beca9d2
-      size: 5676
+      md5: b4f4fa2d990cd96fc9dd5232b0e5b4cd
+      size: 5739
     params:
       params.yaml:
         train.class_types:
@@ -96,8 +96,8 @@ stages:
       md5: cb91cbe8492b7c2f60c99da61b31d032
       size: 19249894
     - path: model/train.metrics.json
-      md5: 40e8269076d2afb95e9eeedc143d2ee7
-      size: 325
+      md5: 742140339d26648436f29bb938829c45
+      size: 335
   relabel:
     cmd: python src/relabel.py
     deps:
