@@ -24,7 +24,7 @@ from numpy import ndarray
 import pandas as pd
 from sklearn.svm import LinearSVC, SVC
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import balanced_accuracy_score, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
 from utils import fix_path, seed_everything, multiclass_confusion_matrix_metrics
@@ -131,15 +131,15 @@ def work() -> None:
         )
     svm.fit(all_xtrain, all_ytrain)  # type: ignore
     y_pred = svm.predict(all_xtest)  # type: ignore
-    accuracy = accuracy_score(y_true=all_ytest, y_pred=y_pred)
+    balanced_accuracy = balanced_accuracy_score(y_true=all_ytest, y_pred=y_pred)
     actual = label_enc.inverse_transform(all_ytest).tolist()
     predicted = label_enc.inverse_transform(y_pred).tolist()
     cm = confusion_matrix(actual, predicted, labels=label_enc.classes_)
     metrics_dict = multiclass_confusion_matrix_metrics(cm=cm, labels=label_enc.classes_)
-    metrics_dict["accuracy"] = accuracy
+    metrics_dict["balanced_accuracy"] = balanced_accuracy
     metrics_dict["test_items"] = len(y_pred)
     metrics_dict["theta_size"] = np.linalg.norm(svm.coef_) if MODEL_TYPE.upper() == "LINEARSVC" else 0  # type: ignore
-    print(f"Results: {len(y_pred):,} test items, accuracy: {accuracy}")
+    print(f"Results: {len(y_pred):,} test items, balanced_accuracy: {balanced_accuracy}")
     with open(fix_path("../model/train.metrics.json"), "wt") as fout:
         json.dump(metrics_dict, fout, indent=2)
     with open(fix_path("../model/svm.model.pkl"), "wb") as fout:  # type: ignore
