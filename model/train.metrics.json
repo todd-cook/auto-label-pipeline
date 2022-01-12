@@ -11,7 +11,7 @@
   "UNK.FN": 182,
   "employer.FN": 194,
   "occupation.FN": 342,
-  "accuracy": 0.8915571665911494,
+  "balanced_accuracy": 0.5484679825269306,
   "test_items": 6621,
   "theta_size": 10.742408117050678
 }

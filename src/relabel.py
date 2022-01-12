@@ -193,7 +193,9 @@ def work() -> None:
     df["previous_class_type"] = corrected_labels
     df["mislabeled_rank"] = cleanlab_idx
     df["date_updated"] = date_updated
-    df.to_csv(fix_path("../data/final/data.csv"), sep="\t", index=False)
+    df_copy = df.copy() # We copy because we still want to run metrics on xdata
+    df_copy.drop(columns="xdata", inplace=True) # drop huge embeddings, we're done with them
+    df_copy.to_csv(fix_path("../data/final/data.csv"), sep="\t", index=False)
     print_label_corrections(df, k=20)
     with open(fix_path("../reports/relabel.metrics.json"), "wt") as fout:
         json.dump(
