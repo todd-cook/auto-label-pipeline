@@ -20,11 +20,11 @@ This program uses the hyperparameters tuned by the `train` stage, and the data o
 
 dvc exp run train -n knc_exp -S train.model_type=KNeighborsClassifier
 
-dvc exp run train -n svc_linear_exp -S train.model_type=LINEARSVC -S train.svc_kernel=linear
+dvc exp run train -n svc_linear_exp -S train.model_type=LINEARSVC -S train.svm_kernel=linear
 
-dvc exp run train -n svc_poly_exp -S train.model_type=SVC -S train.svc_kernel=poly
+dvc exp run train -n svc_poly_exp -S train.model_type=SVC -S train.svm_kernel=poly
 
-dvc exp run train -n svc_rbf_exp -S train.model_type=SVC -S train.svc_kernel=rbf
+dvc exp run train -n svc_rbf_exp -S train.model_type=SVC -S train.svm_kernel=rbf
  
 ### To promote an experiment to a branch
 
