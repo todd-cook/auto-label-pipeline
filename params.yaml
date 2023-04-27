@@ -28,11 +28,14 @@ train:
   svm_dual: true
   use_pca: false
   num_components: 9
-  class_types: [employer, occupation, UNK]
+  class_types:
+  - employer
+  - occupation
+  - UNK
   svm_kernel: rbf
   svm_degree: 3
   svm_gamma: scale
-  model_type: SVC
+  model_type: KNeighborsClassifier
   knc_n_neighbors: 5
   knc_weights: uniform
   knc_algorithm: auto

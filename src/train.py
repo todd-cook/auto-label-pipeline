@@ -145,7 +145,7 @@ def work() -> None:
             gamma=GAMMA,
             kernel=SVM_KERNEL,
         )
-    if MODEL_TYPE.upper() == "KNeighborsClassifier":
+    if MODEL_TYPE.upper() == "KNEIGHBORSCLASSIFIER":
         clf = KNeighborsClassifier(
             n_neighbors=KNC_N_NEIGHBORS,
             weights=KNC_WEIGHTS,

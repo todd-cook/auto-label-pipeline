@@ -115,7 +115,7 @@ def work() -> None:
             min_dist=MIN_DISTANCE_DECISION,
             max_dist=MAX_DISTANCE_DECISION,
         )
-    if MODEL_TYPE.upper() == "KNeighborsClassifier":
+    if MODEL_TYPE.upper() == "KNEIGHBORSCLASSIFIER":
         clf = KNeighborsClassifier(
             n_neighbors=KNC_N_NEIGHBORS,
             weights=KNC_WEIGHTS,

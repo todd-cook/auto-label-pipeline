@@ -28,9 +28,11 @@ dvc exp run -n svc_margin_3 train -S train.regularization_C=0.01 -S train.model_
 dvc exp run -n svc_margin_4 train -S train.regularization_C=10  -S train.model_type=SVC
 dvc exp run -n svc_margin_5 train -S train.regularization_C=100  -S train.model_type=SVC
 
-dvc exp run -n knc_kn_1 -S train.knc_n_neighbors=3 -S train.model_type=KNeighborsClassifier
-dvc exp run -n knc_kn_2 -S train.knc_n_neighbors=5 -S train.model_type=KNeighborsClassifier
-dvc exp run -n knc_kn_3 -S train.knc_n_neighbors=7 -S train.model_type=KNeighborsClassifier
+dvc exp run train -n knc_kn_3 -S train.knc_n_neighbors=3 -S train.model_type=KNeighborsClassifier ;
+dvc exp run train -n knc_kn_4 -S train.knc_n_neighbors=4 -S train.model_type=KNeighborsClassifier ;
+dvc exp run train -n knc_kn_5 -S train.knc_n_neighbors=5 -S train.model_type=KNeighborsClassifier ;
+dvc exp run train -n knc_kn_6 -S train.knc_n_neighbors=6 -S train.model_type=KNeighborsClassifier ;
+dvc exp run train -n knc_kn_7 -S train.knc_n_neighbors=7 -S train.model_type=KNeighborsClassifier ;
 
 dvc exp run -n margin_tune1 train -S train.regularization_C=1 -S train.model_type=LINEARSVC
 dvc exp run -n margin_tune2 train -S train.regularization_C=0.1 -S train.model_type=LINEARSVC
@@ -38,7 +40,13 @@ dvc exp run -n margin_tune3 train -S train.regularization_C=0.01 -S train.model_
 dvc exp run -n margin_tune4 train -S train.regularization_C=10 -S train.model_type=LINEARSVC
 dvc exp run -n margin_tune5 train -S train.regularization_C=100 -S train.model_type=LINEARSVC
 
+dvc exp run relabel -S train.model_type=KNeighborsClassifier -S train.knc_n_neighbors=5
+
 
 ### View results
 
+dvc exp show --only-changed --drop "employer*|occupation*|UNK*|Created|test_items|theta_size|class*" --keep "precision|recall|balanced_accuracy|label_errors"
+
 dvc exp show --keep  "theta_size|train\.regularization_C|employer\.*|occupation\.*" --drop "candidates|filtered*|UNK*|balanced*|test_items|label_*|class*|fetch*|prepare*|train\.s*|relabel*|data*|model*|src*"
+
+etc
