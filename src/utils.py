@@ -16,7 +16,7 @@ import os
 import pathlib
 import random
 from collections import namedtuple
-from typing import Dict, List, Tuple, ValuesView
+from typing import Dict, List, Tuple, Union, ValuesView
 
 import numpy as np
 from numpy import ndarray
@@ -52,7 +52,7 @@ def seed_everything(seed_value: int):
 
 def multiclass_confusion_matrix_metrics(
     cm: np.ndarray, labels: List[str]
-) -> Dict[str, int]:
+) -> Dict[str, Union[int, float]]:
     """
     Create a dictionary of multiple class labels and their TP, TN, FP, FN values
     :param cm: Confusion matrix
@@ -69,7 +69,7 @@ def multiclass_confusion_matrix_metrics(
     >>> assert(metrics['b.TN'] == 4)
     >>> assert(metrics['b.FN'] == 2)
     """
-    metrics = {}  # type: Dict[str, int]
+    metrics = {}  # type: Dict[str, Union[int,float]]
     # TP: The actual value and predicted value, which is found in the diagonal row of the m.
     TP = {labels[i]: np.diag(cm)[i] for i in range(len(labels))}
     # FN: The sum of values of corresponding rows except the TP value

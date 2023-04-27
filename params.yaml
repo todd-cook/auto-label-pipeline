@@ -21,19 +21,27 @@ prepare:
   unknown_tag: UNK
 train:
   seed: 31
-  split: 0.8
-  regularization_C: 0.1
-  penalty: l2
-  loss: squared_hinge
-  dual: true
+  split: 0.7
+  svm_regularization_C: 1
+  svm_penalty: l2
+  svm_loss: squared_hinge
+  svm_dual: true
   use_pca: false
   num_components: 9
   class_types: [employer, occupation, UNK]
-  kernel: poly
-  degree: 3
-  gamma: scale
-  model_type: LinearSVC
+  svm_kernel: rbf
+  svm_degree: 3
+  svm_gamma: scale
+  model_type: SVC
+  knc_n_neighbors: 5
+  knc_weights: uniform
+  knc_algorithm: auto
+  knc_leaf_size: 30
+  knc_p: 2
+  knc_metric: minkowski
 relabel:
-  # The number of indices returned is specified by frac_noise. When
-  # frac_noise = 1.0, all "confident" estimated noise indices are returned.
-  frac_noise: 1.0
+  # The number of folds to use in cross validation; 5 or 10 work well
+  num_crossval_folds: 10
+  # if min and max are none below, logging reports suitable values; data dependent
+  min_distance_decision: -0.29124524614142283
+  max_distance_decision: 2.2929098075032224

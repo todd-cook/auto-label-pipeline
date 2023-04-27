@@ -18,10 +18,11 @@ import os
 import pathlib
 import shutil
 from zipfile import ZipFile
-import yaml
 
 import requests
+import yaml
 from tqdm import tqdm
+
 from utils import fix_path
 
 
@@ -38,7 +39,7 @@ def get_file(uri: str, filename: str) -> None:
         return
 
     print(f"Downloading: {uri} ...")
-    response = requests.get(uri, stream=True)
+    response = requests.get(uri, stream=True, timeout=3600)
     total_size_in_bytes = int(response.headers.get("content-length", 0))
     block_size = 1024  # 1 Kilobyte
     progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
@@ -63,7 +64,7 @@ def get_file(uri: str, filename: str) -> None:
 
 if __name__ == "__main__":
     # Fetch processing params
-    with open(fix_path("../params.yaml"), "r") as fd:
+    with open(fix_path("../params.yaml"), "rt", encoding="utf-8") as fd:
         params = yaml.safe_load(fd)
     parser = argparse.ArgumentParser(description="find where to fetch params.")
     parser.add_argument("--param_group", nargs=1, type=str)

@@ -45,17 +45,23 @@ stages:
         cache: false
     params:
     - train.class_types
-    - train.degree
-    - train.dual
-    - train.gamma
-    - train.kernel
-    - train.loss
+    - train.svm_degree
+    - train.svm_dual
+    - train.svm_gamma
+    - train.svm_kernel
+    - train.svm_loss
     - train.model_type
-    - train.num_components
-    - train.penalty
-    - train.regularization_C
+    - train.svm_penalty
+    - train.svm_regularization_C
     - train.seed
     - train.split
+    - train.knc_n_neighbors
+    - train.knc_weights
+    - train.knc_algorithm
+    - train.knc_leaf_size
+    - train.knc_p
+    - train.knc_metric
+    - train.num_components
     - train.use_pca
   relabel:
     cmd: python src/relabel.py
@@ -72,14 +78,24 @@ stages:
     - data/final/class.metrics.csv:
         cache: false
     params:
+    - prepare.unknown_tag
     - train.class_types
-    - train.degree
-    - train.dual
-    - train.gamma
-    - train.kernel
-    - train.loss
+    - train.svm_degree
+    - train.svm_dual
+    - train.svm_gamma
+    - train.svm_kernel
+    - train.svm_loss
     - train.model_type
-    - train.penalty
-    - train.regularization_C
+    - train.svm_penalty
+    - train.svm_regularization_C
     - train.seed
-    - relabel.frac_noise
+    - train.split
+    - train.knc_n_neighbors
+    - train.knc_weights
+    - train.knc_algorithm
+    - train.knc_leaf_size
+    - train.knc_p
+    - train.knc_metric
+    - relabel.num_crossval_folds
+    - relabel.min_distance_decision
+    - relabel.max_distance_decision

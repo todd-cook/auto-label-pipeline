@@ -79,12 +79,13 @@ The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterize
 ├── reports                 # <-- Directory with metrics output
 │ ├── prepare.metrics.json  
 │ └── relabel.metrics.json
-├── requirements-dev.txt
-├── requirements.txt
+├── pyproject.toml
+├── poetry.lock
 ├── runUnitTests.sh
 └── src                     # <-- Directory containing the pipeline's code
     ├── README.md
-    ├── fetch.py
+    ├── fetch.py    
+    ├── models.py    
     ├── prepare.py
     ├── relabel.py
     ├── train.py
@@ -94,14 +95,14 @@ The pipeline is orchestrated via the [dvc.yaml](dvc.yaml) file, and parameterize
 
 ## Setup
 ### Create environment
-`conda create --name auto-label-pipeline python=3.9`
+`conda create --name auto-label-pipeline python=3.10`
  
 `conda activate auto-label-pipeline`
 
 ### Install requirements
-`pip install -r requirements.txt`
+`pip install poetry` 
 
-If you're going to modify the source, also install the `requirements-dev.txt` file
+`poetry install`
 
 ***
 

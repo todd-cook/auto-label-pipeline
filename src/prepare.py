@@ -15,23 +15,22 @@
 import json
 import pickle
 import string
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
 from glob import glob
 from typing import Dict
-import yaml
 
-from tqdm import tqdm
-import numpy as np
-
-import pandas as pd
 import fasttext
-
+import numpy as np
+import pandas as pd
+import yaml
 from nltk.corpus import stopwords
+from tqdm import tqdm
+
 from utils import (
+    Token,
     fast_text_prediction_to_language_code,
     fix_path,
     get_sent_embeddings,
-    Token,
 )
 
 
@@ -43,7 +42,7 @@ def work() -> None:
     :return: None
     """
     # Fetch processing params
-    with open(fix_path("../params.yaml"), "r") as fd:
+    with open(fix_path("../params.yaml"), "rt", encoding="utf8") as fd:
         params = yaml.safe_load(fd)
     # Note: we share some parameters with previous stages
     EMBEDDINGS_FILE = params["fetch_data"]["file"]
@@ -219,7 +218,9 @@ def work() -> None:
         index=False,
         sep="\t",
     )
-    with open(fix_path("../reports/prepare.metrics.json"), "wt") as fout:
+    with open(
+        fix_path("../reports/prepare.metrics.json"), "wt", encoding="utf8"
+    ) as fout:
         json.dump(
             {
                 "candidates": total_candidates,
