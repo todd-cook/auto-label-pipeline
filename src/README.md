@@ -18,26 +18,52 @@ This program uses the hyperparameters tuned by the `train` stage, and the data o
 
 ### How To Run experiments:
 
-dvc exp run -n knc_model train -S train.model_type=KNeighborsClassifier
-dvc exp run -n svc_model train -S train.model_type=SVC
-dvc exp run -n linear_svc_model train -S train.model_type=LINEARSVC
+dvc exp run train -n knc_exp -S train.model_type=KNeighborsClassifier
 
-dvc exp run -n svc_margin_1 train -S train.regularization_C=1 -S train.model_type=SVC  
-dvc exp run -n svc_margin_2 train -S train.regularization_C=0.1 -S train.model_type=SVC
-dvc exp run -n svc_margin_3 train -S train.regularization_C=0.01 -S train.model_type=SVC
-dvc exp run -n svc_margin_4 train -S train.regularization_C=10  -S train.model_type=SVC
-dvc exp run -n svc_margin_5 train -S train.regularization_C=100  -S train.model_type=SVC
+dvc exp run train -n svc_linear_exp -S train.model_type=LINEARSVC -S train.svc_kernel=linear
+
+dvc exp run train -n svc_poly_exp -S train.model_type=SVC -S train.svc_kernel=poly
+
+dvc exp run train -n svc_rbf_exp -S train.model_type=SVC -S train.svc_kernel=rbf
+ 
+### To promote an experiment to a branch
+
+dvc exp branch knc_exp knc_ex
+
+dvc exp branch svc_linear_exp svc_linear_ex
+
+etc...
+
+### Run experiments to tune hyperparameters
+
+dvc exp run train -n svc_margin_1 -S train.regularization_C=1 -S train.model_type=SVC
+
+dvc exp run train -n svc_margin_2 -S train.regularization_C=0.1 -S train.model_type=SVC
+
+dvc exp run train -n svc_margin_3 -S train.regularization_C=0.01 -S train.model_type=SVC
+
+dvc exp run train -n svc_margin_4 -S train.regularization_C=10 -S train.model_type=SVC
+
+dvc exp run train -n svc_margin_5 -S train.regularization_C=100 -S train.model_type=SVC
 
 dvc exp run train -n knc_kn_3 -S train.knc_n_neighbors=3 -S train.model_type=KNeighborsClassifier ;
+
 dvc exp run train -n knc_kn_4 -S train.knc_n_neighbors=4 -S train.model_type=KNeighborsClassifier ;
+
 dvc exp run train -n knc_kn_5 -S train.knc_n_neighbors=5 -S train.model_type=KNeighborsClassifier ;
+
 dvc exp run train -n knc_kn_6 -S train.knc_n_neighbors=6 -S train.model_type=KNeighborsClassifier ;
+
 dvc exp run train -n knc_kn_7 -S train.knc_n_neighbors=7 -S train.model_type=KNeighborsClassifier ;
 
 dvc exp run -n margin_tune1 train -S train.regularization_C=1 -S train.model_type=LINEARSVC
+
 dvc exp run -n margin_tune2 train -S train.regularization_C=0.1 -S train.model_type=LINEARSVC
+
 dvc exp run -n margin_tune3 train -S train.regularization_C=0.01 -S train.model_type=LINEARSVC
+
 dvc exp run -n margin_tune4 train -S train.regularization_C=10 -S train.model_type=LINEARSVC
+
 dvc exp run -n margin_tune5 train -S train.regularization_C=100 -S train.model_type=LINEARSVC
 
 dvc exp run relabel -S train.model_type=KNeighborsClassifier -S train.knc_n_neighbors=5

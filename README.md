@@ -7,6 +7,7 @@ Goals:
 * Automatically clean noisy data labels using [Cleanlab](https://github.com/cleanlab/cleanlab) cross validation
 * Determine which [FastText](https://fasttext.cc) subword embedding performs better for semi-supervised cluster classification
 * Determine optimal hyperparameters through experiment tracking
+* Automatically find data that is likely mislabeled.
 * Prepare casually labeled data for human evaluation
 
 ### Demo: View Experiments recorded in git branches:
@@ -138,6 +139,10 @@ To create an experiment by changing a parameter:
 
 `dvc exp run --set-param train.split=0.9 --name my_split_ex`
 
+or more readable:
+
+`dvc exp run -S train.split=0.9 --name my_split_ex`
+
 (When promoting an experiment to a branch, DVC does not switch into the branch.)
 
 To save and share your experiment in a branch:
@@ -149,11 +154,11 @@ See also: [DVC Experiments](https://dvc.org/doc/command-reference/exp)
 ## View plots
 Initial Confusion matrix:
 
-`dvc plots show model/class.metrics.csv -x actual -y predicted  --template confusion`
+`dvc plots show model/class.metrics.csv -x actual -y predicted --template confusion`
 
 Confusion matrix after relabeling:
 
-`dvc plots show data/final/class.metrics.csv -x actual -y predicted  --template confusion`
+`dvc plots show data/final/class.metrics.csv -x actual -y predicted --template confusion`
 
 See also: [DVC plots](https://dvc.org/doc/command-reference/plots)
 
