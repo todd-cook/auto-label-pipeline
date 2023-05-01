@@ -62,7 +62,7 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNEIGHBORSCLASSIFIER
+        train.model_type: LINEARSVC
         train.num_components: 9
         train.seed: 31
         train.split: 0.7
@@ -76,14 +76,14 @@ stages:
         train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: 3fb716094aa57be6ff7e7051fd5afa82
-      size: 182830
+      md5: 181439559b82c09568d261756aeae789
+      size: 183642
     - path: model/svm.model.pkl
-      md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
-      size: 55798871
+      md5: 896393f4c50a544c193b03d3f198a873
+      size: 7816
     - path: model/train.metrics.json
-      md5: 101d4b615ee521554704290e36162158
-      size: 407
+      md5: b37294aa8b9a22c8cb094850da08be17
+      size: 422
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -91,8 +91,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
-      size: 55798871
+      md5: 896393f4c50a544c193b03d3f198a873
+      size: 7816
     - path: src/relabel.py
       md5: ef41f0a0b77fff535b3e66f647b9363c
       size: 8310
@@ -112,7 +112,7 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNEIGHBORSCLASSIFIER
+        train.model_type: LINEARSVC
         train.seed: 31
         train.split: 0.7
         train.svm_degree: 3
@@ -124,11 +124,11 @@ stages:
         train.svm_regularization_C: 1
     outs:
     - path: data/final/class.metrics.csv
-      md5: 7e501b2ae093532f7ec501b1cccbb0f2
-      size: 178208
+      md5: 6b629e42830046e244eef3d2e209ded5
+      size: 181791
     - path: data/final/data.csv
-      md5: 4c7e7067e0662754cb313bf9e9cba91e
-      size: 2864690
+      md5: d1dba9efc8cbf88402d4e0d5882ba087
+      size: 2844943
     - path: reports/relabel.metrics.json
-      md5: 578a346115f7281c21e2566f2342252f
+      md5: 4962d269f8ca3ad76b67ec0cbf8a5b1f
       size: 113
