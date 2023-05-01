@@ -32,10 +32,10 @@ train:
   - employer
   - occupation
   - UNK
-  svm_kernel: linear
+  svm_kernel: rbf
   svm_degree: 3
   svm_gamma: scale
-  model_type: KNEIGHBORSCLASSIFIER
+  model_type: SVC
   knc_n_neighbors: 5
   knc_weights: uniform
   knc_algorithm: auto

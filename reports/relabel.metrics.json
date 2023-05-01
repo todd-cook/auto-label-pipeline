@@ -1,1 +1,1 @@
-{"label_errors": 1993, "labels_total": 33102, "class_dist": {"employer": 26217, "occupation": 4431, "UNK": 2454}}
+{"label_errors": 1307, "labels_total": 33102, "class_dist": {"employer": 26516, "occupation": 4950, "UNK": 1636}}

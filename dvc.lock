@@ -62,28 +62,28 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNEIGHBORSCLASSIFIER
+        train.model_type: SVC
         train.num_components: 9
         train.seed: 31
         train.split: 0.7
         train.svm_degree: 3
         train.svm_dual: true
         train.svm_gamma: scale
-        train.svm_kernel: linear
+        train.svm_kernel: rbf
         train.svm_loss: squared_hinge
         train.svm_penalty: l2
         train.svm_regularization_C: 1
         train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: 3fb716094aa57be6ff7e7051fd5afa82
-      size: 182830
+      md5: 40460df52cbfd6be927e1ffd6b8bf65b
+      size: 183579
     - path: model/svm.model.pkl
-      md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
-      size: 55798871
+      md5: 1682c441cefd7697c97803876ff9ac09
+      size: 12319072
     - path: model/train.metrics.json
-      md5: 101d4b615ee521554704290e36162158
-      size: 407
+      md5: e8f4e4262b57661d56c5bbac480b1d56
+      size: 405
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -91,8 +91,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
-      size: 55798871
+      md5: 1682c441cefd7697c97803876ff9ac09
+      size: 12319072
     - path: src/relabel.py
       md5: ef41f0a0b77fff535b3e66f647b9363c
       size: 8310
@@ -112,23 +112,23 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNEIGHBORSCLASSIFIER
+        train.model_type: SVC
         train.seed: 31
         train.split: 0.7
         train.svm_degree: 3
         train.svm_dual: true
         train.svm_gamma: scale
-        train.svm_kernel: linear
+        train.svm_kernel: rbf
         train.svm_loss: squared_hinge
         train.svm_penalty: l2
         train.svm_regularization_C: 1
     outs:
     - path: data/final/class.metrics.csv
-      md5: 7e501b2ae093532f7ec501b1cccbb0f2
-      size: 178208
+      md5: 62237669bf0568d1a8e9133782fd1905
+      size: 182008
     - path: data/final/data.csv
-      md5: 4c7e7067e0662754cb313bf9e9cba91e
-      size: 2864690
+      md5: 9828ae9b3f0b42525096d69943b0a64a
+      size: 2843424
     - path: reports/relabel.metrics.json
-      md5: 578a346115f7281c21e2566f2342252f
+      md5: dcd0a85642e52690dfccdfc43f613535
       size: 113
