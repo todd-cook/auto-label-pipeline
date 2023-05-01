@@ -18,9 +18,9 @@ stages:
     cmd: python src/prepare.py
     deps:
     - path: data/raw
-      md5: 573f9cdf42c2928857daa1fc1b4520db.dir
-      size: 11762456053
-      nfiles: 8
+      md5: 0753c785ef434e8fd76bd078b66774bf.dir
+      size: 7242327342
+      nfiles: 7
     - path: src/prepare.py
       md5: 7e8282bdb051a4fb1318eba3d3dd19d0
       size: 9655
@@ -62,14 +62,14 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNeighborsClassifier
+        train.model_type: KNEIGHBORSCLASSIFIER
         train.num_components: 9
         train.seed: 31
         train.split: 0.7
         train.svm_degree: 3
         train.svm_dual: true
         train.svm_gamma: scale
-        train.svm_kernel: rbf
+        train.svm_kernel: linear
         train.svm_loss: squared_hinge
         train.svm_penalty: l2
         train.svm_regularization_C: 1
@@ -94,13 +94,13 @@ stages:
       md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
       size: 55798871
     - path: src/relabel.py
-      md5: 6eeac5b67989a9f15e8c48e991010c79
-      size: 8573
+      md5: ef41f0a0b77fff535b3e66f647b9363c
+      size: 8310
     params:
       params.yaml:
         prepare.unknown_tag: UNK
-        relabel.max_distance_decision: 2.2929098075032224
-        relabel.min_distance_decision: -0.29124524614142283
+        relabel.max_distance_decision:
+        relabel.min_distance_decision:
         relabel.num_crossval_folds: 10
         train.class_types:
         - employer
@@ -112,13 +112,13 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNeighborsClassifier
+        train.model_type: KNEIGHBORSCLASSIFIER
         train.seed: 31
         train.split: 0.7
         train.svm_degree: 3
         train.svm_dual: true
         train.svm_gamma: scale
-        train.svm_kernel: rbf
+        train.svm_kernel: linear
         train.svm_loss: squared_hinge
         train.svm_penalty: l2
         train.svm_regularization_C: 1
@@ -127,7 +127,7 @@ stages:
       md5: 7e501b2ae093532f7ec501b1cccbb0f2
       size: 178208
     - path: data/final/data.csv
-      md5: 91f686e63f8ff42b37b1f33b8eabfd8e
+      md5: 4c7e7067e0662754cb313bf9e9cba91e
       size: 2864690
     - path: reports/relabel.metrics.json
       md5: 578a346115f7281c21e2566f2342252f

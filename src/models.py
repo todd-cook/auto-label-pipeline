@@ -14,93 +14,31 @@
 """`models.py` - model classes adapted for cleanlab."""
 import logging
 import multiprocessing
+import pathlib
 
 import numpy as np
-from sklearn.svm import SVC, LinearSVC
+import yaml
+from sklearn.svm import LinearSVC
 
 logging.basicConfig(level=logging.INFO)
 
 
-class WrappedSVC(SVC):  # Inherits sklearn base classifier
-    """
-    Cleanlab implementation expects a `predict_proba` function
-    Sklearn SVC classes provide the same functionality via a `decision_function` function
-    so here we wrap the classes
-    """
-
-    min_dist = None
-    max_dist = None
-    logger = None
-
-    # pylint: disable=too-many-locals
-    def __init__(
-        self,
-        *,
-        C=1.0,
-        kernel="rbf",
-        degree=3,
-        gamma="scale",
-        coef0=0.0,
-        shrinking=True,
-        probability=True,
-        tol=1e-3,
-        cache_size=200,
-        class_weight=None,
-        verbose=False,
-        max_iter=-1,
-        decision_function_shape="ovr",
-        break_ties=False,
-        random_state=None,
-        min_dist=None,
-        max_dist=None,
-    ):
-        super().__init__(
-            kernel=kernel,
-            degree=degree,
-            gamma=gamma,
-            coef0=coef0,
-            tol=tol,
-            C=C,
-            shrinking=shrinking,
-            probability=probability,
-            cache_size=cache_size,
-            class_weight=class_weight,
-            verbose=verbose,
-            max_iter=max_iter,
-            decision_function_shape=decision_function_shape,
-            break_ties=break_ties,
-            random_state=random_state,
-        )
-        self.min_dist = min_dist
-        self.max_dist = max_dist
-        self.logger = multiprocessing.get_logger()
-        self.logger.addHandler(logging.StreamHandler())
-        self.logger.setLevel(logging.INFO)
-
-    def predict_proba(self, X):
-        r"""Provides confidence probability measurements for the predictions;
-        Note: relative values; normed between 0-1.
-        We cache min max values across executions."""
-        Xdata = self.decision_function(X)
-        xmin = np.min(Xdata)
-        xmax = np.max(Xdata)
-        # This logging is not ideal, but expedient
-        if self.min_dist is None or xmin < self.min_dist:
-            self.min_dist = xmin
-            self.logger.info("setting min_dist: %f", xmin)
-        if self.max_dist is None or xmax > self.max_dist:
-            self.max_dist = xmax
-            self.logger.info("setting max_dist: %f", xmax)
-        x_norm = (Xdata - self.min_dist) / (self.max_dist - self.min_dist)
-        return x_norm
-
-
 class WrappedLinearSVC(LinearSVC):
     # pylint: disable=too-many-instance-attributes
-    """
+    r"""
+    Similar to SVC with parameter kernel=’linear’, but implemented in terms of liblinear rather
+    than libsvm, so it has more flexibility in the choice of penalties and loss functions
+    and should scale better to large numbers of samples.
+
     Cleanlab implementation expects a `predict_proba` function
     Sklearn SVC classes provide the same functionality via a `decision_function` function
-    so here we wrap the classes
+    so here we wrap the classes. However, the `decision_function` provides a confidence score
+    for a sample that is proportional to the signed distance of that sample to the hyperplane--
+    thus, by itself it will not return probabilities in the [0,1] range; thus to normalize
+    we must inject high-low values that depend on the characteristics of your data;
+    tl;dr: run relabeling more than once and push values seen in logs into the `min_dist` and
+    `max_dist` parameters.
+
     """
     min_dist = None
     max_dist = None
@@ -122,8 +60,6 @@ class WrappedLinearSVC(LinearSVC):
         verbose=0,
         random_state=None,
         max_iter=1000,
-        min_dist=None,
-        max_dist=None,
     ):
         self.probability = probability
         self.dual = dual
@@ -150,11 +86,17 @@ class WrappedLinearSVC(LinearSVC):
             random_state=self.random_state,
             max_iter=self.max_iter,
         )
-        self.min_dist = min_dist
-        self.max_dist = max_dist
         self.logger = multiprocessing.get_logger()
         self.logger.addHandler(logging.StreamHandler())
         self.logger.setLevel(logging.INFO)
+        parent_dir = str(pathlib.Path(__file__).parent.parent.resolve())
+        try:
+            with open(f"{parent_dir}/params.yaml", "rt", encoding="utf8") as fin:
+                params = yaml.safe_load(fin)
+                self.min_dist = params["relabel"]["min_distance_decision"]
+                self.max_dist = params["relabel"]["max_distance_decision"]
+        except IOError:
+            self.logger.warning("Problem reading ../params.yaml")
 
     def predict_proba(self, X):
         r"""Provides confidence probability measurements for the predictions;
@@ -165,9 +107,13 @@ class WrappedLinearSVC(LinearSVC):
         xmax = np.max(Xdata)
         # This logging is not ideal, but expedient
         if self.min_dist is None or xmin < self.min_dist:
+            if self.min_dist is not None:
+                self.logger.info("xmin was: %f", self.min_dist)
             self.min_dist = xmin
             self.logger.info("setting min_dist: %f", xmin)
         if self.max_dist is None or xmax > self.max_dist:
+            if self.max_dist is not None:
+                self.logger.info("xmax was: %f", self.max_dist)
             self.max_dist = xmax
             self.logger.info("setting max_dist: %f", xmax)
         x_norm = (Xdata - self.min_dist) / (self.max_dist - self.min_dist)

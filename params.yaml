@@ -32,10 +32,10 @@ train:
   - employer
   - occupation
   - UNK
-  svm_kernel: rbf
+  svm_kernel: linear
   svm_degree: 3
   svm_gamma: scale
-  model_type: KNeighborsClassifier
+  model_type: KNEIGHBORSCLASSIFIER
   knc_n_neighbors: 5
   knc_weights: uniform
   knc_algorithm: auto
@@ -46,5 +46,5 @@ relabel:
   # The number of folds to use in cross validation; 5 or 10 work well
   num_crossval_folds: 10
   # if min and max are none below, logging reports suitable values; data dependent
-  min_distance_decision: -0.29124524614142283
-  max_distance_decision: 2.2929098075032224
+  min_distance_decision:
+  max_distance_decision:

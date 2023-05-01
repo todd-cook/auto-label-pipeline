@@ -24,9 +24,10 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_predict, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
+from sklearn.svm import SVC
 from tqdm import tqdm
 
-from models import WrappedLinearSVC, WrappedSVC
+from models import WrappedLinearSVC  # , WrappedSVC
 from train import encode_ys
 from utils import fix_path, print_label_corrections, seed_everything
 
@@ -61,8 +62,6 @@ def work() -> None:
     KNC_P = params["train"]["knc_p"]
     KNC_METRIC = params["train"]["knc_metric"]
     NUM_CROSSVAL_FOLDS = params["relabel"]["num_crossval_folds"]
-    MIN_DISTANCE_DECISION = params["relabel"]["min_distance_decision"]
-    MAX_DISTANCE_DECISION = params["relabel"]["max_distance_decision"]
     seed_everything(SEED)
     label_enc = LabelEncoder()
     label_enc.fit(CLASS_TYPES)
@@ -102,18 +101,15 @@ def work() -> None:
             penalty=PENALTY,
             loss=LOSS,
             dual=DUAL,
-            min_dist=MIN_DISTANCE_DECISION,
-            max_dist=MAX_DISTANCE_DECISION,
         )
     if MODEL_TYPE.upper() == "SVC":
-        clf = WrappedSVC(
+        clf = SVC(
             random_state=SEED,
             C=REGULARIZATION_C,
             degree=DEGREE,
             gamma=GAMMA,
             kernel=KERNEL,
-            min_dist=MIN_DISTANCE_DECISION,
-            max_dist=MAX_DISTANCE_DECISION,
+            probability=True,
         )
     if MODEL_TYPE.upper() == "KNEIGHBORSCLASSIFIER":
         clf = KNeighborsClassifier(
