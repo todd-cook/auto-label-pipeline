@@ -20,11 +20,13 @@ This program uses the hyperparameters tuned by the `train` stage, and the data o
 
 dvc exp run train -n knc_exp -S train.model_type=KNeighborsClassifier
 
-dvc exp run train -n svc_linear_exp -S train.model_type=LINEARSVC -S train.svm_kernel=linear
+dvc exp run train -n svc_linear_exp -S train.model_type=LINEARSVC
 
-dvc exp run train -n svc_poly_exp -S train.model_type=SVC -S train.svm_kernel=poly
+dvc exp run train -n svm_linear_exp -S train.model_type=SVC -S train.svm_kernel=linear
 
-dvc exp run train -n svc_rbf_exp -S train.model_type=SVC -S train.svm_kernel=rbf
+dvc exp run train -n svm_poly_exp -S train.model_type=SVC -S train.svm_kernel=poly
+
+dvc exp run train -n svm_rbf_exp -S train.model_type=SVC -S train.svm_kernel=rbf
  
 ### To promote an experiment to a branch
 
@@ -36,15 +38,15 @@ etc...
 
 ### Run experiments to tune hyperparameters
 
-dvc exp run train -n svc_margin_1 -S train.regularization_C=1 -S train.model_type=SVC
+dvc exp run train -n svm_margin_1 -S train.regularization_C=1 -S train.model_type=SVC
 
-dvc exp run train -n svc_margin_2 -S train.regularization_C=0.1 -S train.model_type=SVC
+dvc exp run train -n svm_margin_2 -S train.regularization_C=0.1 -S train.model_type=SVC
 
-dvc exp run train -n svc_margin_3 -S train.regularization_C=0.01 -S train.model_type=SVC
+dvc exp run train -n svm_margin_3 -S train.regularization_C=0.01 -S train.model_type=SVC
 
-dvc exp run train -n svc_margin_4 -S train.regularization_C=10 -S train.model_type=SVC
+dvc exp run train -n svm_margin_4 -S train.regularization_C=10 -S train.model_type=SVC
 
-dvc exp run train -n svc_margin_5 -S train.regularization_C=100 -S train.model_type=SVC
+dvc exp run train -n svm_margin_5 -S train.regularization_C=100 -S train.model_type=SVC
 
 dvc exp run train -n knc_kn_3 -S train.knc_n_neighbors=3 -S train.model_type=KNeighborsClassifier ;
 
