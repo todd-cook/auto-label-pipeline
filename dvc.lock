@@ -62,7 +62,7 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNEIGHBORSCLASSIFIER
+        train.model_type: SVC
         train.num_components: 9
         train.seed: 31
         train.split: 0.7
@@ -76,14 +76,14 @@ stages:
         train.use_pca: false
     outs:
     - path: model/class.metrics.csv
-      md5: 3fb716094aa57be6ff7e7051fd5afa82
-      size: 182830
+      md5: ed72dff5ddc7ea35d27a0f5f5f7951d8
+      size: 183560
     - path: model/svm.model.pkl
-      md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
-      size: 55798871
+      md5: e798700a3e8a9b7e5494ba56c444116a
+      size: 10475035
     - path: model/train.metrics.json
-      md5: 101d4b615ee521554704290e36162158
-      size: 407
+      md5: d5fc28627c968db21628c126f6680aea
+      size: 405
   relabel:
     cmd: python src/relabel.py
     deps:
@@ -91,8 +91,8 @@ stages:
       md5: 0346c908967902a9b8b3f04a66b125e8
       size: 154638900
     - path: model/svm.model.pkl
-      md5: 6e7460ddf3f7e4d462e6f8c97cb8eee8
-      size: 55798871
+      md5: e798700a3e8a9b7e5494ba56c444116a
+      size: 10475035
     - path: src/relabel.py
       md5: ef41f0a0b77fff535b3e66f647b9363c
       size: 8310
@@ -112,7 +112,7 @@ stages:
         train.knc_n_neighbors: 5
         train.knc_p: 2
         train.knc_weights: uniform
-        train.model_type: KNEIGHBORSCLASSIFIER
+        train.model_type: SVC
         train.seed: 31
         train.split: 0.7
         train.svm_degree: 3
@@ -124,11 +124,11 @@ stages:
         train.svm_regularization_C: 1
     outs:
     - path: data/final/class.metrics.csv
-      md5: 7e501b2ae093532f7ec501b1cccbb0f2
-      size: 178208
+      md5: cb9de7424556566b3780f79b1fbb6045
+      size: 181793
     - path: data/final/data.csv
-      md5: 4c7e7067e0662754cb313bf9e9cba91e
-      size: 2864690
+      md5: b47a1fdc1c02694ebb32aa2654e57695
+      size: 2847392
     - path: reports/relabel.metrics.json
-      md5: 578a346115f7281c21e2566f2342252f
+      md5: ce0a27bc3155b9034e1203f527a7bf10
       size: 113
